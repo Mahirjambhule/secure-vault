@@ -30,7 +30,16 @@ app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY", "MAHIR_JAMBHULE_SECUR
 jwt = JWTManager(app)
 
 # Add your Vercel URL to the list
-CORS(app, resources={r"/*": {"origins": ["http://localhost:5173", "https://secure-vault-mahir.vercel.app"]}})
+# --- CORS CONFIGURATION ---
+CORS(app, resources={r"/*": {
+    "origins": [
+        "https://secure-vault-psi-eight.vercel.app", 
+        "http://localhost:5173",
+        "http://127.0.0.1:5173"
+    ],
+    "methods": ["GET", "POST", "OPTIONS"],
+    "allow_headers": ["Content-Type", "Authorization"]
+}})
 
 # --- RATE LIMITER CONFIG ---
 limiter = Limiter(
