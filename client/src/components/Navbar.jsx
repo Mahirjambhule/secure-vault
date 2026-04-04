@@ -56,7 +56,7 @@ const Navbar = () => {
     <nav className="fixed top-0 left-0 w-full z-50 border-b border-white/10 bg-[#0f172a]/80 backdrop-blur-md">
       <div className="w-full px-8 py-4 flex items-center">
 
-        {/* 1. Logo - Anchored Left */}
+        {/* 1. Logo */}
         <Link to="/" className="flex items-center gap-2 group shrink-0">
           <div className="p-2 bg-blue-600 rounded-lg group-hover:bg-blue-500 transition-colors">
             <Shield className="text-white w-6 h-6" />
@@ -66,7 +66,7 @@ const Navbar = () => {
           </span>
         </Link>
 
-        {/* 2. Spacer & Navigation - This pushes everything to the right */}
+        {/* 2. Spacer & Navigation */}
         <div className="flex-1 flex justify-end items-center gap-6">
           
           {/* Desktop Nav Items */}
