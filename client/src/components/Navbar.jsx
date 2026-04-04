@@ -4,13 +4,14 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { jwtDecode } from 'jwt-decode';
 import { 
   Shield, LayoutDashboard, History, Info, ShieldCheck, 
-  Home, Crown, LogOut, User, ChevronDown, Database 
+  Home, Crown, LogOut, ChevronDown, Database, Menu, X 
 } from 'lucide-react';
 
 const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const isAuthenticated = !!localStorage.getItem('token');
   const userEmail = localStorage.getItem('userEmail') || 'User';
@@ -23,6 +24,7 @@ const Navbar = () => {
   };
 
   useEffect(() => {
+    setIsMobileMenuOpen(false);
     const token = localStorage.getItem('token');
     if (token) {
       try {
@@ -52,10 +54,10 @@ const Navbar = () => {
 
   return (
     <nav className="fixed top-0 left-0 w-full z-50 border-b border-white/10 bg-[#0f172a]/80 backdrop-blur-md">
-      <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+      <div className="w-full px-8 py-4 flex items-center">
 
-        {/* Logo Area */}
-        <Link to="/" className="flex items-center gap-2 group">
+        {/* 1. Logo - Anchored Left */}
+        <Link to="/" className="flex items-center gap-2 group shrink-0">
           <div className="p-2 bg-blue-600 rounded-lg group-hover:bg-blue-500 transition-colors">
             <Shield className="text-white w-6 h-6" />
           </div>
@@ -64,9 +66,11 @@ const Navbar = () => {
           </span>
         </Link>
 
-        {/* Right Side Navigation */}
-        <div className="flex items-center gap-4 md:gap-6">
-          <div className="hidden lg:flex gap-2">
+        {/* 2. Spacer & Navigation - This pushes everything to the right */}
+        <div className="flex-1 flex justify-end items-center gap-6">
+          
+          {/* Desktop Nav Items */}
+          <div className="hidden lg:flex items-center gap-2 mr-4">
             {navItems.map((item) => (
               <Link key={item.path} to={item.path} className="relative px-3 py-2">
                 {isActive(item.path) && (
@@ -77,9 +81,9 @@ const Navbar = () => {
                   />
                 )}
                 <span className={`relative flex items-center gap-2 text-sm font-medium transition-colors ${isActive(item.path)
-                    ? (item.name === 'Upgrade' ? 'text-yellow-400' : 'text-blue-400')
-                    : (item.name === 'Upgrade' ? 'text-yellow-500/70 hover:text-yellow-400' : 'text-gray-400 hover:text-white')
-                  }`}>
+                  ? (item.name === 'Upgrade' ? 'text-yellow-400' : 'text-blue-400')
+                  : (item.name === 'Upgrade' ? 'text-yellow-500/70 hover:text-yellow-400' : 'text-gray-400 hover:text-white')
+                }`}>
                   <item.icon className="w-4 h-4" />
                   {item.name}
                 </span>
@@ -87,10 +91,10 @@ const Navbar = () => {
             ))}
           </div>
 
-          <div className="flex items-center gap-4 pl-4 border-l border-white/10 relative">
+          {/* Profile / Auth Section */}
+          <div className="flex items-center gap-4 pl-6 border-l border-white/10 relative">
             {isAuthenticated ? (
               <div className="relative">
-                {/* Profile Toggle Button */}
                 <button
                   onClick={() => setIsProfileOpen(!isProfileOpen)}
                   className="flex items-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 p-1.5 pr-3 rounded-full transition-all group"
@@ -101,13 +105,10 @@ const Navbar = () => {
                   <ChevronDown className={`w-4 h-4 text-gray-500 transition-transform duration-300 ${isProfileOpen ? 'rotate-180' : ''}`} />
                 </button>
 
-                {/* Dropdown Menu */}
                 <AnimatePresence>
                   {isProfileOpen && (
                     <>
-                      {/* Close overlay */}
                       <div className="fixed inset-0 z-[-1]" onClick={() => setIsProfileOpen(false)} />
-                      
                       <motion.div
                         initial={{ opacity: 0, y: 10, scale: 0.95 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -118,17 +119,12 @@ const Navbar = () => {
                           <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-1">Authenticated As</p>
                           <p className="text-white text-sm font-medium truncate">{userEmail}</p>
                         </div>
-
                         <div className="space-y-1">
                           <div className="flex items-center gap-3 p-3 text-gray-400 text-xs rounded-xl">
                             <Database className="w-4 h-4 text-blue-400" />
                             <span>Storage Plan: <b className="text-blue-400">Basic (50MB)</b></span>
                           </div>
-                          
-                          <button
-                            onClick={handleLogout}
-                            className="w-full flex items-center gap-3 p-3 text-red-400 text-sm hover:bg-red-400/10 rounded-xl transition-colors group"
-                          >
+                          <button onClick={handleLogout} className="w-full flex items-center gap-3 p-3 text-red-400 text-sm hover:bg-red-400/10 rounded-xl transition-colors group">
                             <LogOut className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                             <span className="font-medium">Logout Session</span>
                           </button>
@@ -139,13 +135,48 @@ const Navbar = () => {
                 </AnimatePresence>
               </div>
             ) : (
-              <Link to="/auth" className="text-sm font-medium px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg transition-colors shadow-lg shadow-blue-600/20">
+              <Link to="/auth" className="hidden sm:block text-sm font-medium px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg transition-colors shadow-lg shadow-blue-600/20">
                 Sign In
               </Link>
             )}
+
+            {/* Mobile Menu Toggle Button */}
+            <button 
+              className="lg:hidden p-2 text-gray-400 hover:text-white transition-colors"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            >
+              {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
+            </button>
           </div>
         </div>
       </div>
+
+      {/* Mobile Drawer Menu (Slide Down) */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            className="lg:hidden border-t border-white/10 bg-[#0f172a] overflow-hidden"
+          >
+            <div className="p-4 space-y-2">
+              {navItems.map((item) => (
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  className={`flex items-center gap-4 p-4 rounded-xl transition-colors ${
+                    isActive(item.path) ? 'bg-blue-600/10 text-blue-400' : 'text-gray-400 hover:bg-white/5'
+                  }`}
+                >
+                  <item.icon size={20} />
+                  <span className="font-medium">{item.name}</span>
+                </Link>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </nav>
   );
 };
