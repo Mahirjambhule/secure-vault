@@ -23,6 +23,7 @@ import certifi
 from werkzeug.security import generate_password_hash, check_password_hash
 import jwt
 from datetime import datetime, timedelta, timezone
+import resend
 
 load_dotenv()
 app = Flask(__name__)
@@ -63,6 +64,8 @@ cloudinary.config(
   api_key = os.getenv("CLOUDINARY_API_KEY"), 
   api_secret = os.getenv("CLOUDINARY_API_SECRET") 
 )
+
+resend.api_key = os.getenv("RESEND_API_KEY")
 
 # --- MONGODB CONNECTION ---
 MONGO_URI = os.getenv("MONGO_URI")
@@ -132,29 +135,26 @@ def token_required(f):
     return decorated
 
 # --- OTP EMAIL SENDER FUNCTION ---
-def send_otp_email(receiver_email, otp_code):
-    # Gmail credentials
-    sender_email = "mahirjambhule92@gmail.com"
-    sender_password = "lmvl dqwy egri czem"
-    
+def send_otp_email(receiver_email, otp):
     try:
-        # Create the email message
-        msg = MIMEText(f"Your SecureVault Zero-Trust verification code is: {otp_code}\n\nThis code will expire in 5 minutes.")
-        msg['Subject'] = 'SecureVault Login Verification'
-        msg['From'] = f"SecureVault <{sender_email}>"
-        msg['To'] = receiver_email
-
-        # Connect to Gmail's server and send
-        server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
-        server.login(sender_email, sender_password)
-        server.sendmail(sender_email, receiver_email, msg.as_string())
-        server.quit()
-        
-        print(f"✅ Success: Real email OTP sent to {receiver_email}")
-        
+        r = resend.Emails.send({
+            "from": "SecureVault <onboarding@resend.dev>",
+            "to": receiver_email,
+            "subject": "Your Security Code",
+            "html": f"""
+                <div style="font-family: sans-serif; padding: 20px; border: 1px solid #eee;">
+                    <h2>SecureVault Verification</h2>
+                    <p>Your One-Time Password (OTP) is:</p>
+                    <h1 style="color: #2563eb; letter-spacing: 5px;">{otp}</h1>
+                    <p>This code will expire in 10 minutes.</p>
+                </div>
+            """
+        })
+        print(f"--- Email Sent via Resend: {r['id']} ---")
+        return True
     except Exception as e:
-        print(f"❌ Email failed to send: {e}")
-
+        print(f"--- Resend Error: {e} ---")
+        return False
 
 # --- AUTHENTICATION ROUTES ---
 def is_strong_password(password):
