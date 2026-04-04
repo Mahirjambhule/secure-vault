@@ -24,12 +24,12 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import jwt
 from datetime import datetime, timedelta, timezone
 
+load_dotenv()
 app = Flask(__name__)
 
 app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY", "MAHIR_JAMBHULE_SECURE_VAULT_2026_LONG_KEY")
 jwt = JWTManager(app)
 
-# Add your Vercel URL to the list
 # --- CORS CONFIGURATION ---
 CORS(app, resources={r"/*": {
     "origins": [
@@ -55,7 +55,6 @@ def ratelimit_handler(e):
     return jsonify(error=f"Security Lock: Too many requests. {e.description}"), 429
 
 # --- SECURITY CONFIG ---
-# In a real app, this goes in a .env file!
 app.config['SECRET_KEY'] = os.getenv("FLASK_SECRET_KEY", "super-secret-zero-trust-key-2026")
 
 # --- CLOUDINARY CONFIG ---
@@ -262,7 +261,6 @@ def login():
     otp = str(random.randint(100000, 999999))
     
     # Save OTP and expiry (5 minutes) to the database for this user
-    # Simple and clean
     expiry = datetime.now(timezone.utc) + timedelta(minutes=5)
     users_collection.update_one(
         {'_id': user['_id']}, 
@@ -314,7 +312,6 @@ def verify_otp():
     users_collection.update_one({'_id': user['_id']}, {'$unset': {'otp': "", 'otp_expiry': ""}})
 
     # Generate the final JWT Token
-    # Use the function we imported earlier
     expires = timedelta(minutes=30)
     token = create_access_token(identity=str(user['_id']), expires_delta=expires)
 
