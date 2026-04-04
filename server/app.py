@@ -29,7 +29,7 @@ app = Flask(__name__)
 app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY", "MAHIR_JAMBHULE_SECURE_VAULT_2026_LONG_KEY")
 jwt = JWTManager(app)
 
-CORS(app, resources={r"/*": {"origins": ["http://localhost:5173", "https://your-app.vercel.app"]}})
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 # --- RATE LIMITER CONFIG ---
 limiter = Limiter(
