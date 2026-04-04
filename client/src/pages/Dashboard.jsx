@@ -4,6 +4,10 @@ import { UploadCloud, File, X, Loader2, ShieldCheck, HardDrive } from 'lucide-re
 import axios from 'axios';
 import toast from 'react-hot-toast';
 
+const API_URL = window.location.hostname === "localhost"
+    ? "http://127.0.0.1:5000"
+    : "https://secure-vault-u2pt.onrender.com";
+
 const Dashboard = () => {
     const [file, setFile] = useState(null);
     const [isUploading, setIsUploading] = useState(false);
@@ -12,12 +16,21 @@ const Dashboard = () => {
 
     const fetchQuota = async () => {
         try {
-            const response = await axios.get('http://127.0.0.1:5000/quota', {
-                headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+            const token = localStorage.getItem('token');
+            const response = await axios.get(`${API_URL}/quota`, {
+                headers: { 'Authorization': `Bearer ${token}` }
             });
-            setQuota(response.data);
-        } catch (error) {
-            console.error("Failed to load quota", error);
+    
+            console.log("QUOTA CHECK:", response.data);
+    
+            setQuota({
+                used: response.data.used_bytes || 0,
+                max: response.data.max_bytes || 52428800,
+                percentage: ((response.data.used_bytes || 0) / (response.data.max_bytes || 52428800)) * 100,
+                file_count: response.data.file_count || 0
+            });
+        } catch (err) {
+            console.error("Quota failed", err);
         }
     };
 
@@ -37,34 +50,33 @@ const Dashboard = () => {
     };
     const clearFile = () => setFile(null);
 
-    const handleUpload = async () => {
-        if (!file) return toast.error("Please select a file first!");
-
-        if (quota.used + file.size > quota.max) {
-            return toast.error("This file exceeds your 50MB storage limit!");
-        }
+    const handleUpload = async (e) => {
+        e.preventDefault();
+        if (!file) return;
 
         setIsUploading(true);
         const formData = new FormData();
         formData.append('file', file);
 
-        toast.promise(
-            axios.post('http://127.0.0.1:5000/upload', formData, {
+        try {
+            const token = localStorage.getItem('token');
+            await axios.post('http://127.0.0.1:5000/upload', formData, {
                 headers: {
-                    'Content-Type': 'multipart/form-data',
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'multipart/form-data'
                 }
-            }),
-            {
-                loading: 'Encrypting and uploading to SecureVault...',
-                success: () => {
-                    setFile(null);
-                    fetchQuota();
-                    return 'File successfully encrypted and stored!';
-                },
-                error: (err) => err.response?.data?.error || 'Upload failed. Please check the server connection.'
-            }
-        ).finally(() => setIsUploading(false));
+            });
+
+            toast.success("File Secured!");
+            setFile(null);
+
+            await fetchQuota();
+
+        } catch (error) {
+            toast.error(error.response?.data?.error || "Upload Failed");
+        } finally {
+            setIsUploading(false);
+        }
     };
 
     const getProgressBarColor = () => {
@@ -77,35 +89,56 @@ const Dashboard = () => {
         <div className="min-h-screen pt-24 px-6 pb-12">
             <div className="max-w-4xl mx-auto">
 
-                <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-6">
-                    <div>
+                <div className="flex flex-col md:flex-row items-start justify-between mb-8 gap-6">
+                    <div className="flex-1">
                         <h1 className="text-3xl font-bold text-white">Encryption Vault</h1>
-                        <p className="text-gray-400 mt-2">Upload files securely. Data is encrypted client-side before transmission.</p>
+                        <p className="text-gray-400 mt-2 max-w-lg">
+                            Upload files securely. Data is encrypted client-side before transmission.
+                        </p>
                     </div>
 
-                    {/* QUOTA WIDGET */}
-                    <div className="bg-[#1e293b] border border-gray-700 p-4 rounded-xl w-full md:w-72 shadow-lg">
-                        <div className="flex items-center justify-between mb-2">
-                            <div className="flex items-center gap-2">
-                                <HardDrive className="w-4 h-4 text-blue-400" />
-                                <span className="text-sm font-medium text-gray-300">Storage Status</span>
+                    {/* QUOTA WIDGET*/}
+                    <div className="w-full md:w-auto">
+                        <div className="bg-[#1e293b] border border-gray-700 p-3.5 rounded-xl w-full md:w-64 shadow-xl">
+                            <div className="flex items-center justify-between mb-2">
+                                <div className="flex items-center gap-1.5">
+                                    <HardDrive className="w-3.5 h-3.5 text-blue-400" />
+                                    <span className="text-xs font-bold text-gray-300">Vault Status</span>
+                                </div>
+                                {/* Minimalist File Count Badge */}
+                                <span className="text-[10px] bg-blue-500/20 text-blue-400 px-1.5 py-0.5 rounded font-black tracking-tight uppercase">
+                                    {quota.file_count || 0} FILES
+                                </span>
                             </div>
-                            <span className="text-[10px] bg-blue-500/20 text-blue-400 px-2 py-0.5 rounded-full font-bold">
-                                {quota.file_count} FILES
-                            </span>
-                        </div>
 
-                        <div className="w-full bg-gray-800 rounded-full h-2.5 mb-2 overflow-hidden">
-                            <motion.div
-                                initial={{ width: 0 }}
-                                animate={{ width: `${quota.percentage}%` }}
-                                className={`h-2.5 rounded-full ${quota.percentage > 90 ? 'bg-red-500' : 'bg-blue-500'}`}
-                            />
-                        </div>
+                            {/* MB Used Display - Smaller fonts */}
+                            <div className="mb-2.5">
+                                <div className="flex items-baseline gap-1">
+                                    <span className="text-xl font-black text-white">
+                                        {formatMB(quota.used || 0)}
+                                    </span>
+                                    <span className="text-gray-500 font-bold text-xs">MB / 50 MB</span>
+                                </div>
+                            </div>
 
-                        <div className="flex justify-between text-xs text-gray-400 font-medium">
-                            <span>{formatMB(quota.used)} MB used</span>
-                            <span>{formatMB(quota.max)} MB total</span>
+                            {/* Thinner Progress Bar (h-1.5) */}
+                            <div className="w-full bg-gray-800 rounded-full h-1.5 mb-1.5 overflow-hidden border border-gray-700/50">
+                                <motion.div
+                                    initial={{ width: 0 }}
+                                    animate={{ width: `${quota.percentage || 0}%` }}
+                                    // minWidth keeps even tiny files visible
+                                    style={{ minWidth: (quota.used > 0) ? '3px' : '0' }}
+                                    className={`h-full rounded-full transition-all duration-700 ease-out ${quota.percentage > 90 ? 'bg-red-500' : 'bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.3)]'
+                                        }`}
+                                />
+                            </div>
+
+                            {/* Mini Percentage Display */}
+                            <div className="flex justify-end text-[10px] font-bold">
+                                <span className="text-gray-500">
+                                    {(quota.percentage || 0).toFixed(1)}% Full
+                                </span>
+                            </div>
                         </div>
                     </div>
                 </div>
