@@ -5,8 +5,8 @@ import requests
 with open("secret_plans.txt", "w") as f:
     f.write("CONFIDENTIAL: The Zero Trust project is a success!")
 
-# 2. Define the target (Localhost)
-url = 'http://127.0.0.1:5000/upload'
+# 2. Define the target
+url = 'https://secure-vault-u2pt.onrender.com/upload'
 
 # 3. Attach the file
 files = {'file': open('secret_plans.txt', 'rb')}

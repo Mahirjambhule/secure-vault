@@ -3,9 +3,7 @@ import requests
 
 # 1. The filename we uploaded earlier
 target_filename = "secret_plans.txt"
-url = f'http://127.0.0.1:5000/download/{target_filename}'
-
-# 2. The Dev Token
+url = f'https://secure-vault-u2pt.onrender.com/download/{target_filename}'
 headers = {'Authorization': 'Bearer dev-token-123'}
 
 print(f"Requesting {target_filename}...")

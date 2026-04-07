@@ -46,10 +46,11 @@ jwt = JWTManager(app)
 # --- CORS CONFIGURATION ---
 CORS(app, resources={r"/*": {
     "origins": [
-        "https://secure-vault-psi-eight.vercel.app", 
-        "http://localhost:5173",
-        "http://127.0.0.1:5173"
-    ],
+    "https://secure-vault-psi-eight.vercel.app",
+    "https://secure-vault-psi-eight.vercel.app/",
+    "http://localhost:5173",
+    "http://127.0.0.1:5173"
+],
     "methods": ["GET", "POST", "DELETE", "OPTIONS"],
     "allow_headers": ["Content-Type", "Authorization"],
     "expose_headers": ["Content-Type", "Authorization"],
