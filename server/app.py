@@ -295,7 +295,7 @@ def register():
         "email": email,
         "password": hashed_password,
         "plan": "Basic",
-        "max_storage": 52428800, # 50MB in bytes
+        "max_storage": 524288000, # 500MB in bytes
         "current_storage": 0,
         "created_at": datetime.now(timezone.utc)
     }
@@ -388,7 +388,7 @@ def get_quota():
     # Initialize variables to 0 to prevent "UnboundLocalError"
     used_bytes = 0
     file_count = 0
-    MAX_BYTES = 52428800 
+    MAX_BYTES = 524288000 
     
     try:
         identity = get_jwt_identity()
@@ -441,7 +441,7 @@ def get_quota():
         # Return hardcoded 0s so the frontend doesn't see "undefined"
         return jsonify({
             'used_bytes': 0, 
-            'max_bytes': 52428800, 
+            'max_bytes': 524288000, 
             'file_count': 0,
             'status': 'error'
         }), 200
@@ -462,14 +462,14 @@ def upload_file():
     original_data = file.read()
     file_size = len(original_data)
 
-    # 3. Quota Check (50MB Limit)
+    # 3. Quota Check (500MB Limit)
     pipeline = [
         {'$match': {'owner': user_email}},
         {'$group': {'_id': None, 'total_size': {'$sum': '$file_size'}}}
     ]
     result = list(files_collection.aggregate(pipeline))
     used_space = result[0]['total_size'] if result else 0
-    MAX_QUOTA = 50 * 1024 * 1024 
+    MAX_QUOTA = 500 * 1024 * 1024 
 
     if used_space + file_size > MAX_QUOTA:
         return jsonify({'error': 'Storage quota exceeded!'}), 403

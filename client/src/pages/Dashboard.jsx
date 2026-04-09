@@ -11,7 +11,7 @@ const API_URL = window.location.hostname === "localhost"
 const Dashboard = () => {
     const [file, setFile] = useState(null);
     const [isUploading, setIsUploading] = useState(false);
-    const [quota, setQuota] = useState({ used: 0, max: 52428800, percentage: 0, file_count: 0 });
+    const [quota, setQuota] = useState({ used: 0, max: 524288000, percentage: 0, file_count: 0 });
     const fileInputRef = useRef(null);
 
     const fetchQuota = async () => {
@@ -25,8 +25,8 @@ const Dashboard = () => {
     
             setQuota({
                 used: response.data.used_bytes || 0,
-                max: response.data.max_bytes || 52428800,
-                percentage: ((response.data.used_bytes || 0) / (response.data.max_bytes || 52428800)) * 100,
+                max: response.data.max_bytes || 524288000,
+                percentage: ((response.data.used_bytes || 0) / (response.data.max_bytes || 524288000)) * 100,
                 file_count: response.data.file_count || 0
             });
         } catch (err) {
@@ -117,7 +117,7 @@ const Dashboard = () => {
                                     <span className="text-xl font-black text-white">
                                         {formatMB(quota.used || 0)}
                                     </span>
-                                    <span className="text-gray-500 font-bold text-xs">MB / 50 MB</span>
+                                    <span className="text-gray-500 font-bold text-xs">MB / 500 MB</span>
                                 </div>
                             </div>
 

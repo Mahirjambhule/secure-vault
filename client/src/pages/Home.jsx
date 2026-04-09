@@ -1,7 +1,11 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { ShieldCheck, Lock, Cloud, ArrowRight, Fingerprint, Database, Zap, ShieldAlert, MonitorCheck, Share2, Server } from 'lucide-react';
+import { 
+  ShieldCheck, Lock, Cloud, ArrowRight, Fingerprint, 
+  Database, Zap, ShieldAlert, MonitorCheck, Share2, 
+  Server, Cpu, Globe, Key 
+} from 'lucide-react';
 
 const Home = () => {
   const isAuthenticated = !!localStorage.getItem('token');
@@ -21,18 +25,18 @@ const Home = () => {
             transition={{ duration: 0.8 }}
           >
             <span className="px-4 py-2 rounded-full border border-blue-500/30 bg-blue-500/10 text-blue-400 text-sm font-semibold tracking-wide uppercase">
-              Zero Trust Architecture
+              Hybrid MERN-Flask Architecture
             </span>
 
             <h1 className="mt-6 text-6xl font-bold leading-tight">
-              Secure Cloud <br />
+              Zero-Knowledge <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400">
-                Infrastructure
+                Data Sovereignty
               </span>
             </h1>
 
             <p className="mt-6 text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed">
-              The only cloud storage where <span className="text-white italic">you</span> hold the keys. We provide the vault, but your data stays invisible to everyone—including us.
+              SecureVault utilizes <span className="text-white font-mono">AES-256</span> client-side encryption. We provide the storage, but <span className="text-white italic">you</span> provide the keys. Data remains unreadable to the cloud—and to us.
             </p>
 
             <div className="mt-10 flex gap-4 justify-center">
@@ -42,7 +46,7 @@ const Home = () => {
                   whileTap={{ scale: 0.95 }}
                   className="px-8 py-4 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-semibold text-lg shadow-lg shadow-blue-600/20 transition-all flex items-center gap-2"
                 >
-                  {isAuthenticated ? 'Go to Dashboard' : 'Start My Free Vault'} <ArrowRight className="w-5 h-5" />
+                  {isAuthenticated ? 'Enter My Vault' : 'Initialize Secure Vault'} <ArrowRight className="w-5 h-5" />
                 </motion.button>
               </Link>
             </div>
@@ -54,36 +58,35 @@ const Home = () => {
             transition={{ delay: 0.4, duration: 0.8 }}
             className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-6"
           >
-            <HomeCard icon={ShieldCheck} title="Total Privacy" desc="Files are locked on your device before they ever reach the internet." color="text-blue-400" />
-            <HomeCard icon={Lock} title="Bank-Level Security" desc="We use the same encryption standards trusted by global banks and governments." color="text-purple-400" />
-            <HomeCard icon={Cloud} title="Reliable Storage" desc="Access your secure files from anywhere in the world, on any device." color="text-pink-400" />
+            <HomeCard icon={Cpu} title="Client-Side Crypto" desc="AES-256 bit encryption occurs in your browser. Raw files never touch the network." color="text-blue-400" />
+            <HomeCard icon={Key} title="Stateless Auth" desc="JWT-based sessions with Flask-Bcrypt hashing ensure your credentials stay immutable." color="text-purple-400" />
+            <HomeCard icon={Globe} title="Cloud Distribution" desc="Powered by Cloudinary BLOB storage and MongoDB Atlas for global metadata indexing." color="text-pink-400" />
           </motion.div>
         </div>
       </section>
 
-      {/* --- NEW SECTION: SIMPLIFIED VISUAL JOURNEY --- */}
+      {/* --- JOURNEY SECTION --- */}
       <section className="py-24 px-6 border-t border-white/5 bg-[#0f172a]/50">
         <div className="max-w-6xl mx-auto text-center">
-          <h2 className="text-4xl font-bold mb-16">How SecureVault Protects You</h2>
+          <h2 className="text-4xl font-bold mb-16">The Zero-Knowledge Workflow</h2>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 relative">
-            {/* Desktop-only connecting line */}
             <div className="hidden md:block absolute top-1/3 left-1/4 right-1/4 h-[2px] bg-gradient-to-r from-blue-500/50 via-purple-500/50 to-pink-500/50 -z-10" />
 
             <JourneyStep
               icon={MonitorCheck}
-              title="1. Lock It"
-              desc="When you select a file, it's immediately encrypted on your own computer."
+              title="1. Local Encryption"
+              desc="Files are converted into encrypted BLOBs on your device using your unique salt."
             />
             <JourneyStep
               icon={Share2}
-              title="2. Send It"
-              desc="The 'scrambled' file travels through a secure tunnel to our cloud servers."
+              title="2. Secure Tunnel"
+              desc="Encrypted ciphertext is relayed to our Python/Flask backend via HTTPS/TLS 1.3."
             />
             <JourneyStep
               icon={Server}
-              title="3. Store It"
-              desc="Your data is stored in pieces across the cloud, unreadable to anyone but you."
+              title="3. BLOB Storage"
+              desc="Ciphertext is stored on Cloudinary, while metadata is secured in MongoDB Atlas."
             />
           </div>
         </div>
@@ -91,21 +94,21 @@ const Home = () => {
 
       {/* --- FEATURES GRID --- */}
       <section className="py-24 px-6 max-w-7xl mx-auto text-center">
-        <h2 className="text-4xl font-bold mb-16 italic">Complete Peace of Mind</h2>
+        <h2 className="text-4xl font-bold mb-16 italic">Engineered for Privacy</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          <MiniCard icon={Fingerprint} title="Extra Verification" desc="A second security code is sent to your email to ensure it's really you." />
-          <MiniCard icon={ShieldAlert} title="Spam Protection" desc="Our systems automatically block hackers trying to guess your password." />
-          <MiniCard icon={Database} title="Storage Tracker" desc="Keep a live eye on your 50MB of free military-grade storage." />
-          <MiniCard icon={Zap} title="Permanent Delete" desc="When you delete a file, it's shredded from our servers forever." />
+          <MiniCard icon={Fingerprint} title="SMTP-MFA Relay" desc="Dual-factor authentication powered by Brevo API for secure session entry." />
+          <MiniCard icon={ShieldAlert} title="Zero-Trust Policy" desc="Our servers are blind to your data. No recovery keys, no backdoors, no leaks." />
+          <MiniCard icon={Database} title="Smart Metadata" desc="NoSQL indexing allows lightning-fast retrieval of your encrypted file pointers." />
+          <MiniCard icon={Zap} title="Instant Shred" desc="Deleting a file triggers a secure purge of the BLOB and its metadata markers." />
         </div>
       </section>
 
       {/* --- CALL TO ACTION --- */}
       <section className="py-32 px-6 text-center bg-gradient-to-t from-blue-600/10 to-transparent">
         <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
-          <h2 className="text-5xl font-bold mb-6 italic tracking-tight">Your data deserves a vault.</h2>
+          <h2 className="text-5xl font-bold mb-6 italic tracking-tight">Data sovereignty is a right.</h2>
           <p className="text-gray-400 mb-10 max-w-xl mx-auto text-lg">
-            Stop letting big tech companies scan your personal files. Move to SecureVault today.
+            Experience the fusion of MERN flexibility and Python/Flask security. Start your Zero-Knowledge journey today.
           </p>
           <Link to={isAuthenticated ? "/dashboard" : "/auth"}>
             <button className="px-10 py-5 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-500 transition-all shadow-xl shadow-blue-600/20">
@@ -116,12 +119,14 @@ const Home = () => {
       </section>
 
       <footer className="py-12 border-t border-white/5 text-center text-gray-500 text-sm">
-        <p>&copy; 2026 SecureVault Ecosystem.</p>
-        <p className="mt-2 text-xs opacity-50 uppercase tracking-widest">Built for Privacy</p>
+        <p>&copy; 2026 SecureVault Ecosystem | Built on MERN & Flask.</p>
+        <p className="mt-2 text-xs opacity-50 uppercase tracking-widest">Client-Side Encryption Active</p>
       </footer>
     </div>
   );
 };
+
+// ... (HomeCard, JourneyStep, MiniCard remain same)
 
 const HomeCard = ({ icon: Icon, title, desc, color }) => (
   <div className="p-8 rounded-3xl bg-white/5 border border-white/10 hover:border-blue-500/50 transition-all group">
