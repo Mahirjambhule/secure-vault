@@ -122,8 +122,8 @@ const Home = () => {
       </section>
 
       <footer className="py-12 border-t border-white/5 text-center text-gray-500 text-sm">
-        <p>&copy; 2026 SecureVault Ecosystem | Built on MERN & Flask.</p>
-        <p className="mt-2 text-xs opacity-50 uppercase tracking-widest">Client-Side Encryption Active</p>
+        <p>&copy; 2026 SecureVault.</p>
+        <p className="mt-2 text-xs opacity-50 uppercase tracking-widest">Zero Trust Architecture</p>
       </footer>
     </div>
   );
