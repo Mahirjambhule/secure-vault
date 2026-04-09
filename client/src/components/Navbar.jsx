@@ -122,7 +122,7 @@ const Navbar = () => {
                         <div className="space-y-1">
                           <div className="flex items-center gap-3 p-3 text-gray-400 text-xs rounded-xl">
                             <Database className="w-4 h-4 text-blue-400" />
-                            <span>Storage Plan: <b className="text-blue-400">Basic (50MB)</b></span>
+                            <span>Storage Plan: <b className="text-blue-400">Basic (500MB)</b></span>
                           </div>
                           <button onClick={handleLogout} className="w-full flex items-center gap-3 p-3 text-red-400 text-sm hover:bg-red-400/10 rounded-xl transition-colors group">
                             <LogOut className="w-4 h-4 group-hover:translate-x-1 transition-transform" />

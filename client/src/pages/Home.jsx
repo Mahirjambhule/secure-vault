@@ -24,20 +24,23 @@ const Home = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <span className="px-4 py-2 rounded-full border border-blue-500/30 bg-blue-500/10 text-blue-400 text-sm font-semibold tracking-wide uppercase">
-              Hybrid MERN-Flask Architecture
-            </span>
+            <div className="inline-flex items-center px-4 py-1.5 rounded-full border border-blue-500/30 bg-blue-500/10 text-blue-400 text-xs font-bold tracking-widest uppercase mb-8">
+  Zero Trust Architecture
+</div>
 
-            <h1 className="mt-6 text-6xl font-bold leading-tight">
-              Zero-Knowledge <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400">
-                Data Sovereignty
-              </span>
-            </h1>
+{/* Main Heading */}
+<h1 className="text-6xl md:text-7xl font-bold text-white tracking-tight leading-[1.1]">
+  Secure Cloud <br />
+  <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400">
+    Infrastructure
+  </span>
+</h1>
 
-            <p className="mt-6 text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed">
-              SecureVault utilizes <span className="text-white font-mono">AES-256</span> client-side encryption. We provide the storage, but <span className="text-white italic">you</span> provide the keys. Data remains unreadable to the cloud—and to us.
-            </p>
+{/* Description Paragraph */}
+<p className="mt-8 text-lg md:text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed">
+  The only cloud storage where <span className="text-white italic">you</span> hold the keys. 
+  We provide the vault, but your data stays invisible to everyone—including us.
+</p>
 
             <div className="mt-10 flex gap-4 justify-center">
               <Link to={isAuthenticated ? "/dashboard" : "/auth"}>
