@@ -1,5 +1,5 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import React, { useEffect } from 'react'; // Added useEffect
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom'; // Added useLocation
 import { Toaster } from 'react-hot-toast';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
@@ -10,13 +10,30 @@ import About from './pages/About';
 import Auth from './pages/Auth';
 import Subscription from './pages/Subscription';
 
+// --- SCROLL RESET COMPONENT ---
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  return null;
+};
+
 function App() {
   return (
     <Router>
+      {/* 1. Put this right here, inside Router but outside Routes */}
+      <ScrollToTop /> 
+
       <div className="min-h-screen bg-[#0f172a] text-white font-sans selection:bg-blue-500/30">
         <Navbar />
 
-        <Toaster position="bottom-right" toastOptions={{ style: { background: '#1e293b', color: '#fff' } }} />
+        <Toaster 
+          position="bottom-right" 
+          toastOptions={{ style: { background: '#1e293b', color: '#fff' } }} 
+        />
 
         <Routes>
           <Route path="/" element={<Home />} />
