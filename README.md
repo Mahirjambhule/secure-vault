@@ -28,18 +28,3 @@ The system operates on three distinct layers:
 2. **Logic Layer (Flask):** Orchestrates authentication handshakes, MFA verification, and secure routing.
 3. **Data Layer:** Maintains a strict separation between metadata (MongoDB) and encrypted blobs (Cloudinary).
 
-
-
-## ⚙️ Installation & Setup
-
-### Prerequisites
-- Node.js & NPM
-- Python 3.9+
-- Cloudinary, MongoDB Atlas, and Brevo API accounts
-
-### Backend Configuration
-1. Navigate to the `/backend` folder.
-2. Create a virtual environment: `python -m venv venv`.
-3. Activate the environment and install dependencies:
-   ```bash
-   pip install -r requirements.txt
