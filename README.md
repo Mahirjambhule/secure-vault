@@ -1,3 +1,5 @@
+https://secure-vault-psi-eight.vercel.app/
+
 # SecureVault — Zero-Knowledge Cloud Storage Ecosystem
 
 SecureVault is a high-security cloud storage platform built on a **Zero-Trust Architecture**. Unlike traditional cloud services, SecureVault moves the security perimeter to the client-side, ensuring that sensitive files are encrypted locally before transmission. This ensures that even the storage provider (Cloudinary) and the database (MongoDB) remain "blind" to the user's data content.
